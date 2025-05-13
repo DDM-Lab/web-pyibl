@@ -9,12 +9,10 @@ from shiny import reactive
 from shiny.express import input, render, ui
 
 # TODO:
-#   figure out how to hide some of the plots (?)
-#   maybe allow fiddling blending temperature?
-#   allow dumping data as CSV
+#   allow dumping data as CSV?
 #   allow downloading plots?
 #   allow saving and restoring settings?
-#   online doc? probably not necessary but think about it
+#   online doc?
 
 DEFAULT_PREPOPULATED_MULTIPLIER = 1.2
 
@@ -90,7 +88,7 @@ def simulation_results():
 
 with ui.sidebar(width=400):
     ui.tags.style("html {font-size: 65%;}")
-    ui.input_select("option_count", None, ("2 Options", "3 Options", "4 Options"), width="25%")
+    ui.input_select("option_count", None, ("2 Options", "3 Options", "4 Options"), width="35%")
     with ui.card():
         ui.HTML("Option A")
         with ui.layout_columns(col_widths=(3, 6, 3)):
