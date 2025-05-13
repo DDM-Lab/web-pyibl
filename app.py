@@ -89,7 +89,7 @@ def simulation_results():
                                                                 temperature=blending_temperature())))
 
 with ui.sidebar(width=400):
-    ui.tags.style("html {font-size: 50%;}")
+    ui.tags.style("html {font-size: 65%;}")
     ui.input_select("option_count", None, ("2 Options", "3 Options", "4 Options"), width="25%")
     with ui.card():
         ui.HTML("Option A")
