@@ -16,12 +16,8 @@ from shiny.express import input, render, ui
 #   allow downloading plots?
 #   allow saving and restoring settings?
 #   online doc? probably not necessary but think about it
-from pprint import pp
 
-PREPOPULATED_MULTIPLIER = 1.2
-
-# The gamble will eventually be set by the UI
-TEST_GAMBLE = {"A": (3, 1, 3), "B": (0, 0.75, 4)}
+DEFAULT_PREPOPULATED_MULTIPLIER = 1.2
 
 
 class ChoiceExperiment (IteratedExperiment):
@@ -120,7 +116,7 @@ with ui.sidebar(width=400):
             @render.text
             def max_payoff(col_widths=(6, 1, 2)):
                 return f"Max payoff: {max_utility(gamble())};   Multiplier:"
-            ui.input_numeric("prepop_multiplier", None, 1.2, min=1.0)
+            ui.input_numeric("prepop_multiplier", None, DEFAULT_PREPOPULATED_MULTIPLIER, min=1.0)
             @render.text
             def prepop_value():
                 return "Value: foo"
