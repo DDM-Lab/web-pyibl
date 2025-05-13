@@ -1,4 +1,5 @@
 from alhazen import IteratedExperiment
+import math
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
@@ -8,8 +9,6 @@ from shiny import reactive
 from shiny.express import input, render, ui
 
 # TODO:
-#   display the prepopulated value
-#      maybe allow varying the multiplier?
 #   figure out how to hide some of the plots (?)
 #   maybe allow fiddling blending temperature?
 #   allow dumping data as CSV
@@ -25,11 +24,12 @@ class ChoiceExperiment (IteratedExperiment):
     def prepare_experiment(self, **kwargs):
         self.noise = kwargs["noise"]
         self.decay = kwargs["decay"]
+        self.temperature = kwargs["temperature"]
         self.gamble = kwargs["gamble"]
         self.prepop = kwargs["prepop"]
 
     def setup(self):
-        self.agent = Agent(noise=self.noise, decay=self.decay)
+        self.agent = Agent(noise=self.noise, decay=self.decay, temperature=self.temperature)
         self.agent.populate(self.gamble.keys(), self.prepop)
 
     def run_participant_prepare(self, participant, condition, context):
@@ -65,6 +65,15 @@ def prepopulated_value():
     return input.prepop_multiplier() * max_utility(gamble())
 
 @reactive.calc
+def blending_temperature():
+    if input.manual_temp():
+        return input.temperature()
+    elif input.noise() < 0.01:
+        return 1
+    else:
+        return math.sqrt(2) * input.noise()
+
+@reactive.calc
 def simulation_results():
     input.recompute()
     g = gamble()
@@ -76,7 +85,8 @@ def simulation_results():
                                        show_progress=False).run(gamble=g,
                                                                 prepop=prepopulated_value(),
                                                                 noise=input.noise(),
-                                                                decay=input.decay())))
+                                                                decay=input.decay(),
+                                                                temperature=blending_temperature())))
 
 with ui.sidebar(width=400):
     ui.tags.style("html {font-size: 50%;}")
@@ -109,20 +119,42 @@ with ui.sidebar(width=400):
                 ui.input_numeric("D_high", None, 0)
     ui.input_slider("participants", "Participants", min=1, max=2000, value=200)
     ui.input_slider("rounds", "Rounds", min=5, max=200, value=60)
-    ui.input_slider("noise", "Noise", min=0.01, max=1.5, value=0.25)
+    ui.input_slider("noise", "Noise", min=0, max=1.5, value=0.25)
     ui.input_slider("decay", "Decay", min=0.0, max=2.5, value=0.5)
     with ui.card():
         with ui.layout_columns():
+            ui.HTML("Blending temperature")
             @render.text
-            def max_payoff(col_widths=(6, 1, 2)):
-                return f"Max payoff: {max_utility(gamble())};   Multiplier:"
-            ui.input_numeric("prepop_multiplier", None, DEFAULT_PREPOPULATED_MULTIPLIER, min=1.0)
+            def temp_display():
+                if input.manual_temp():
+                    return blending_temperature()
+                elif input.noise() < 0.01:
+                    return "no noise ⇒ 1"
+                else:
+                    return f"√2 × noise = {blending_temperature():.2f}"
+        ui.input_checkbox("manual_temp", "Set manually", False)
+        with ui.panel_conditional("input.manual_temp"):
+            ui.input_slider("temperature", None, min=0.01, max= 2.2, value=1.0)
+    with ui.card():
+        ui.input_switch("show_bvs", "Show blended values", True)
+        ui.input_switch("show_activations", "Show activations", True)
+        ui.input_switch("show_probs", "Show probabilities of retrieval", True)
+    with ui.card():
+        with ui.layout_columns():
             @render.text
             def prepop_value():
-                return "Value: foo"
-    ui.input_checkbox("showprepop", "Prepopulated", True)
-    with ui.layout_columns():
+                return f"Prepopulated value: {prepopulated_value():.2f}"
+            ui.input_switch("show_prepop", "Show in plots", False)
+        with ui.layout_columns():
+            @render.text
+            def max_payoff():
+                return f"Max payoff: {max_utility(gamble())}"
+            with ui.layout_columns():
+                ui.HTML("Multiplier:")
+                ui.input_numeric("prepop_multiplier", None, DEFAULT_PREPOPULATED_MULTIPLIER, min=1.0)
+    with ui.layout_columns(col_widths=(5, 6, 1)):
         ui.input_action_button("recompute", "Recompute")
+        ui.HTML("&nbsp;")
         ui.input_dark_mode(mode="light")
 
 def plot_thing(kind, df, max=None):
@@ -132,16 +164,19 @@ def plot_thing(kind, df, max=None):
 def plot_choice():
     plot_thing("choice", simulation_results())
 
-@render.plot
-def plot_blended_values():
-    plot_thing("bv", simulation_results())
+with ui.panel_conditional("input.show_bvs"):
+    @render.plot
+    def plot_blended_values():
+        plot_thing("bv", simulation_results())
 
-@render.plot
-def plot_activation():
-    plot_thing("activation", simulation_results(),
-               (None if input.showprepop() else max_utility(gamble())))
+with ui.panel_conditional("input.show_activations"):
+    @render.plot
+    def plot_activation():
+        plot_thing("activation", simulation_results(),
+                   (None if input.show_prepop() else max_utility(gamble())))
 
-@render.plot
-def plot_probability():
-    plot_thing("probability", simulation_results(),
-               (None if input.showprepop() else max_utility(gamble())))
+with ui.panel_conditional("input.show_probs"):
+    @render.plot
+    def plot_probability():
+        plot_thing("probability", simulation_results(),
+                   (None if input.show_prepop() else max_utility(gamble())))
