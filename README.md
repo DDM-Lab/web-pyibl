@@ -3,7 +3,7 @@
 This is a web hosted interactive interface to a simple N-ary choice task, implemented using [PyIBL](http://pyibl.ddmlab.com) and [Shiny for Python](https://shiny.posit.co/py/).
 N in this case can be 2, 3 or 4, but no more; the code could be extended to more, but the results would undoubtedly
 look too messy to be useful.
-Each of the N options can have two different payoffs, determined uniformly randomly.
+Each of the N options can have two different payoffs, which is paid out on any given iteration is determined uniformly randomly.
 The UI facilitates setting both the two possible values for each option, as well as the probability of which will be seen.
 Note that by setting both values to the same value, or setting the probabily to 0 or 1, an option can always result in a fixed payoff.
 The simulation is run over an ensemble of virtual participants, and the mean results plotted.
