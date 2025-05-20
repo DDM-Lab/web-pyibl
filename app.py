@@ -1,4 +1,5 @@
 from alhazen import IteratedExperiment
+from datetime import datetime
 import math
 import matplotlib.pyplot as plt
 import os
@@ -164,6 +165,7 @@ def _ev(low, prob, high):
 
 with ui.sidebar(width=400):
     ui.tags.style("html {font-size: 65%;}")
+    print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     ui.input_select("option_count", None, ("2 Options", "3 Options", "4 Options"), width="35%")
     # Grumble: like Jupyter Notebooks Shiny seems to encourage ugly, difficult to update
     #          cut and paste programming; it sure would be nice if there were some easy way
