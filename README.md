@@ -38,7 +38,7 @@ To install WebPyIBL:
 
 There are three environment variables that can be used to configure WebPyIBL
 
-* ``WEB_PYIBL_PROCESS_COUNT`` is the number of cores WebPyIBL attempts to use. By default it assumes HyperThreading, and uses 43% of the *vertual* cores believed to be available.
+* ``WEB_PYIBL_PROCESS_COUNT`` is the number of cores WebPyIBL attempts to use. By default it assumes HyperThreading, and uses 43% of the *virtual* cores believed to be available.
 
 * ``WEB_PYIBL_HOST`` is the host used when launching WebPyIBL; for example, if ``127.0.0.1`` it will *only* be available from ``localhost``.
 

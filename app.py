@@ -10,10 +10,13 @@ from shiny import reactive
 from shiny.express import input, render, ui
 
 # TODO:
-#   allow dumping data as CSV?
-#   allow downloading plots?
-#   allow saving and restoring settings?
-#   online doc?
+#   make the labels and colors consistent between the various plots
+#   make the starting x-values consistent between the various plots
+#   allow dumping data as CSV
+#   allow downloading plots
+#   allow saving and restoring settings
+#   better rounding of numbers for some of the plots in some configurations
+#   allow variable numbers of values for the gambles, at least up to three
 
 DEFAULT_PREPOPULATED_MULTIPLIER = 1.2
 
@@ -45,49 +48,30 @@ by using the switch in the upper right hand corner of the window.
 
 In the panel on the left the first control is a popup allowing the choice of 2, 3 or 4
 options. Immediately beneath it appear sets of controls for each of those options.
-Blah, blah, blah....
+Each option can return either of two values with a probabilistic chance of either
+being returned. To force a constant value simply set the probability to 0% or 100%.
+Note that as you adjust the two values possible and the likelihood of each being
+returned the expected value of that option is updated.
 
-<img src="under-construction.png" alt="alt text" width=256 height=211>
+Below the options are sliders allowing control of the number of virtual participants,
+the number of rounds, and three IBL parameters. Unless "set manually" the blending
+tmperature is set to a default value based on the noise parameter.
 
-**This page still under construction.**
+Below this are five switches for specifying which plots should be drawn.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In in odio id nibh facilisis
-suscipit. Sed vehicula rutrum leo lobortis sagittis. Praesent vel turpis risus. Nunc
-molestie convallis metus sed tristique. Pellentesque semper lacinia tortor ac egestas. Sed
-pellentesque urna metus, sit amet pellentesque tortor varius vitae. Maecenas elementum
-porta scelerisque. Vivamus fermentum pharetra ornare.
+The final box controls the prepopulated instances. These are set to a constant
+times the maximum payoff of any of the options. By default the multiplyer is 1.2 but
+it can be adjusted. It is also configurable whether the various IBL values for the
+prepopulated instances are shown in the plots; often it best to suppress them as
+they typically decay to insignificance fairly quickly.
 
-Curabitur convallis ut est ut dignissim. Nullam rutrum ex vitae volutpat vehicula. Quisque
-tellus enim, volutpat vitae iaculis non, malesuada vitae enim. Morbi quis porta libero.
-Donec mi lorem, eleifend porta tempus vitae, consectetur eget dolor. Maecenas dignissim,
-ligula ut imperdiet laoreet, elit elit volutpat lorem, nec semper metus ex at tortor. Orci
-varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla
-orci diam, pellentesque vitae nisl consequat, facilisis eleifend nunc. Vivamus lectus
-lacus, pretium et suscipit a, hendrerit et augue.
+Whenever any of the above are changed the model is rerun and the
+plots are redrawn as necessary. To
+see how various values change stochasticly you can force a recompute by pressing
+the "Recompute" button.
 
-Donec tellus magna, aliquet at viverra nec, sodales in purus. Sed quis lorem vel metus
-commodo finibus id in metus. Nam posuere vulputate mi, eget ultricies odio. Curabitur quis
-dui vel eros hendrerit tempus. Proin dignissim ullamcorper feugiat. Nunc mollis mauris sit
-amet mollis vehicula. Quisque mauris ex, dictum et commodo ac, venenatis eget est.
-Curabitur bibendum ipsum eget ipsum placerat sodales. Cras et sem in felis facilisis
-iaculis. Fusce tellus augue, tristique at tristique eget, placerat non neque. Pellentesque
-vel dignissim sapien. Integer pellentesque tortor vel turpis tempor faucibus. Duis
-ultricies porttitor nisl. Etiam cursus felis non turpis placerat venenatis.
-
-Etiam commodo ante vitae accumsan consectetur. Morbi iaculis orci id mollis semper. Nullam
-congue mattis dui sit amet mollis. Integer nec dui eros. Donec in sodales nisi, non
-blandit magna. Fusce accumsan aliquam felis vitae fringilla. Donec sollicitudin elit in
-ipsum sagittis, at scelerisque tortor hendrerit. Suspendisse dui nibh, hendrerit et
-sagittis non, imperdiet pretium felis. Donec quam risus, blandit at consequat laoreet,
-eleifend vitae turpis. Praesent sapien magna, faucibus ut dapibus eu, blandit sed enim.
-
-Sed blandit auctor sapien viverra aliquam. In sit amet consectetur lacus, ac euismod
-lacus. Vivamus eu turpis ante. Donec risus dolor, suscipit vel vulputate eu, placerat et
-justo. Curabitur in cursus ipsum, et viverra lacus. Pellentesque nec libero eu libero
-consectetur tincidunt vitae faucibus leo. Duis accumsan justo sit amet nisl cursus
-venenatis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-inceptos himenaeos. Nam lobortis, mauris vel accumsan viverra, magna nibh commodo justo,
-sit amet sollicitudin elit nibh in urna.
+Finally there is control to the right of the "Recompute" button that allows show the
+interface in a "dark" mode, if desired.
 """
 
 
