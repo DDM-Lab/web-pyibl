@@ -17,6 +17,8 @@ from shiny.express import input, render, ui
 #   allow saving and restoring settings
 #   better rounding of numbers for some of the plots in some configurations
 #   allow variable numbers of values for the gambles, at least up to three
+#   allow downloading a stand alone PyIBL model implementing the game
+#      describe by the UI, to serve as a good PyIBL demonstration
 
 DEFAULT_PREPOPULATED_MULTIPLIER = 1.2
 
