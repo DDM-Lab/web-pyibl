@@ -234,7 +234,8 @@ with ui.sidebar(width=400):
     with ui.card():
         ui.input_switch("show_bvs", "Show blended values", True)
         ui.input_switch("show_probs", "Show probabilities of retrieval", True)
-        ui.input_switch("show_activations", "Show activations", True)
+        ui.input_switch("show_activations", "Show total activations", True)
+        ui.input_switch("show_activation_noise", "Show activation noise", False)
         ui.input_switch("show_baselevel", "Show baselevel activations", True)
     with ui.card():
         with ui.layout_columns():
@@ -284,6 +285,11 @@ with ui.panel_conditional("input.show_activations"):
     @render.plot
     def plot_activation():
         plot_thing("activation", simulation_results(), "Mean total activation", True)
+
+with ui.panel_conditional("input.show_activation_noise"):
+    @render.plot
+    def plot_activation_noise():
+        plot_thing("noise", simulation_results(), "Mean activation noise", True)
 
 with ui.panel_conditional("input.show_baselevel"):
     @render.plot
